@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="row">
+    <div class="col-3 bg-primary .pre-scrollable">
+        <form method="POST" action="{% url 'signup' %}">
+         {% csrf_token %}
+      <h5 class="form-signin-heading text-center text-success">New Transaction</h5>
+            <br />
+      <input type="datetime-local" class="form-control" name="transaction_date"  required="" autofocus="" style="margin-top:10px"/>
+      <input type="text" class="form-control" name="transaction_amount"  placeholder="0.00" required="" style="margin-top:10px"/>
+      <select class="form-control" name="transaction_payment_method"  style="margin-top:10px">
+          <option>VISA</option>
+          <option>MC</option>
+          <option>AMEX</option>
+      </select>
+       <select class="form-control" name="transaction_payment_location"  style="margin-top:10px">
+          <option>TNT</option>
+          <option>Walmart</option>
+          <option>Costco</option>
+      </select>
+       <select class="form-control" name="transaction_type"  style="margin-top:10px">
+          <option>Loan</option>
+          <option>Snacks</option>
+          <option>Grocery</option>
+      </select>
+
+
+
+
+      <button class="btn btn-lg btn-warning btn-block text-primary" type="submit" value="Add" style="margin-top:10px">Add</button>
+    </form>
+
+    </div>
+    <div class="col-9 bg-success">
+                <p>main column</p>
+                <p>main column</p>
+                <p>main column</p>
+                <p>main column</p>
+                <p>main column</p>
+                <p>main column</p>
+                <p>main column</p>
+                <p>main column</p>
+                <p>main column</p>
+                <p>main column</p>
+
+
+
+    </div>
+</div>
+
+
+
+
+
+
+{% endblock %}
