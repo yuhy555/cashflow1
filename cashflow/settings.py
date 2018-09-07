@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'transactions.apps.TransactionsConfig',
     'paymentmethod.apps.PaymentmethodConfig',
     'location.apps.LocationConfig',
     'transactiontype.apps.TransactiontypeConfig',
