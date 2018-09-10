@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container text-center mt-5">
+    <div class="row">
+        <div class="col">
+              <form method="POST" action="{% url 'location_setup' %}">
+             {% csrf_token %}
+              <h5 class="form-signin-heading text-center text-success">Location Setup</h5>
+                    <br />
+              <input type="text" class="form-control" id="description_input" name="description" placeholder="Location Name - required" required="" style="margin-top:10px"/>
+              <input type="text" class="form-control" id="street" name="street"  placeholder="street" style="margin-top:10px"/>
+              <input type="text" class="form-control" id="city" name="city"  placeholder="city" style="margin-top:10px"/>
+              <input type="text" class="form-control" id="province" name="province"  placeholder="Province/State" style="margin-top:10px"/>
+              <input type="text" class="form-control" id="country" name="country"  placeholder="Country" style="margin-top:10px"/>
+              <input type="text" class="form-control" id="postal_code" name="postal_code"  placeholder="Postal Code/Zip Code" style="margin-top:10px"/>
+              <select class="form-control" id="status_input" name="status" style="margin-top:10px">
+                  <option>Active</option>
+                  <option>Inactive</option>
+              </select>
+
+
+
+
+
+              <button class="btn btn-lg btn-warning btn-block text-primary" type="submit" value="Add" style="margin-top:10px">Add</button>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

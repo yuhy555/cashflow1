@@ -7,55 +7,67 @@
 <br>
 
 <div class="container text-center mt-5">
-    <div class="row">
-        <div class="col-4">
 
-             <select id="pm_list" class="form-control" name="payment_method_name"  style="margin-top:10px">
-                 <option value="0">select from ...</option>
-                {% for paymentmethod in payment_methods.all%}
-                    <option value="{{paymentmethod.id}}">{{paymentmethod.method_name}}</option>
-                {% endfor %}
-             </select>
-            <br>
-            <h4>Create New Payment Method or Modify Existing ones.</h4>
-
+    <h2>Your Cards</h2>
+    <div class="row mt-4">
+        <div class="col-2">
+            <a href="{% url 'paymentmethodsetup_page' %}" class="btn btn-primary" role="button">Add New Card</a>
         </div>
-
-
-        <div class="col-8">
-              <form method="POST" action="{% url 'paymentmethodsetup' %}">
-             {% csrf_token %}
-              <h5 class="form-signin-heading text-center text-success">Payment Method</h5>
-                    <br />
-              <input type="text" class="form-control" id="description_input" name="description"  required="" style="margin-top:10px"/>
-              <input type="text" class="form-control" id="credit_limit_input" name="credit_limit"  placeholder="Credit Limit" required="" style="margin-top:10px"/>
-              <select class="form-control" id="status_input" name="status" style="margin-top:10px">
-                  <option>Active</option>
-                  <option>Inactive</option>
-              </select>
-
-
-
-
-
-              <button class="btn btn-lg btn-warning btn-block text-primary" type="submit" value="Add" style="margin-top:10px">Add</button>
-            </form>
-
-          </div>
+        {% for pm in payment_methods.all %}
+        <div class="col-2">
+            {% if pm.status == 1%}
+                <a class="btn btn-outline-success " href="{% url 'paymentmethodmodify_page' pm.id %}">{{pm.method_name}}</a>
+            {% else%}
+                <a class="btn btn-secondary " href="{% url 'paymentmethodmodify_page' pm.id %}">{{pm.method_name}}</a>
+            {% endif %}
+        </div>
+        {% endfor %}
     </div>
-<script>
-    $(document).ready(function(){
-    console.log( $("#pm_list").val());
-    $("#pm_list").click(function(){
-        if($("#pm_list").val() !=0){
-            $("#description_input").val("{{p}}");
-        }
-    });
+    <h2 class="mt-4">Your Places</h2>
+    <div class="row mt-4">
+        <div class="col-2">
+            <a href="{% url 'location_setup_page' %}" class="btn btn-primary" role="button">Add New Place</a>
+        </div>
+        {% for location in locations.all %}
+        <div class="col-2">
+            {% if location.status == 1%}
+                <a class="btn btn-outline-success " href="{% url 'location_modify_page' location.id %}">{{location.name}}</a>
+            {% else%}
+                <a class="btn btn-secondary " href="{% url 'location_modify_page' location.id %}">{{location.name}}</a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    <h2 class="mt-4">Your Types</h2>
+    <div class="row mt-4">
+        <div class="col-2">
+            <a href="{% url 'transaction_type_setup_page' %}" class="btn btn-primary" role="button">Add New Type</a>
+        </div>
+        {% for type in types.all %}
+        <div class="col-2">
+            {% if type.status == 1%}
+                <a class="btn btn-outline-success " href="{% url 'transaction_type_modify_page' type.id %}">{{type.name}}</a>
+            {% else%}
+                <a class="btn btn-secondary " href="{% url 'transaction_type_modify_page' type.id %}">{{type.name}}</a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
 
-});
+<!--<script>-->
+    <!--$(document).ready(function(){-->
+    <!--console.log( $("#pm_list").val());-->
+    <!--$("#pm_list").click(function(){-->
+        <!--if($("#pm_list").val() !=0){-->
+            <!--$("#description_input").val("{{p}}");-->
+        <!--}-->
+    <!--});-->
+
+<!--});-->
 
 
-</script>
+<!--</script>-->
 </div>
 
 
