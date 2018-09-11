@@ -1,17 +1,26 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
+{% if error %}
+    {{ error }}
+{% endif %}
 <div class="container text-center mt-5">
     <div class="row">
         <div class="col">
-              <form method="POST" action="{% url 'location_modify' %}">
+              <form method="POST" action="{% url 'paymentmethodmodify' %}">
              {% csrf_token %}
               <h5 class="form-signin-heading text-center text-success">{{payment_method.method_name}}</h5>
                     <br />
               <input type="hidden" class="form-control" name="id" value="{{payment_method.id}}" />
               <input type="text" class="form-control" id="description_input" name="description"  value="{{payment_method.method_name}}" style="margin-top:10px"/>
               <input type="text" class="form-control" id="credit_limit_input" name="credit_limit"  value="{{payment_method.credit_limit}}" style="margin-top:10px"/>
+              <input type="text" class="form-control" id="color" name="color"  value = "{{payment_method.color}}" placeholder="Choose a preference color below for this card" style="margin-top:10px"/>
+              <br />
+              <input type="text" id="color_picker"/>
+              <script>
+               $("#color_picker").spectrum({
+                color: "#fff"});
+            </script>
               <select class="form-control" id="status_input" name="status" style="margin-top:10px">
                   {% if payment_method.status == 1 %}
                   <option selected="selected">Active</option>
@@ -30,5 +39,11 @@
     </div>
 
 </div>
-
+<script>
+    $("#color_picker").spectrum({
+        change: function(color){
+           $("#color").val(color.toHexString());
+        }
+    });
+</script>
 {% endblock %}

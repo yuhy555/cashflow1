@@ -8,6 +8,7 @@ import logging
 from transactiontype.models import TransactionType
 from location.models import Location
 from transactions.models import Transaction
+from accounts import common
 def signup(request):
     if request.method=='POST':
         #user wants to sign up
@@ -40,13 +41,18 @@ def logout(request):
         auth.logout(request)
         return redirect('home')
 
+@login_required
 def home(request):
-    return render(request,'accounts/home.html')
+    # payment_methods = PaymentMethod.objects.filter(account=request.user.id,status=1)
+    # locations = Location.objects.filter(account=request.user.id,status=1)
+    # types = TransactionType.objects.filter(account=request.user.id,status=1)
+    # transactions = Transaction.objects.filter(account=request.user.id).select_related()
+    return render(request,'accounts/home.html',common.home_data_load(request.user.id))
 def setup(request):
-    payment_methods = PaymentMethod.objects
-    locations = Location.objects
-    types = TransactionType.objects
-    return render(request,'accounts/setup.html',{'payment_methods':payment_methods,'locations':locations,"types":types})
+    # payment_methods = PaymentMethod.objects.filter(account=request.user.id)
+    # locations = Location.objects.filter(account=request.user.id)
+    # types = TransactionType.objects.filter(account=request.user.id)
+    return render(request,'accounts/setup.html',common.setup_data_load(request.user.id))
 def myaccount(request):
     return render(request,'accounts/myaccount.html')
 
@@ -78,15 +84,16 @@ def paymentmethodsetup(request):
                 logger.error("account id pass")
                 payment_method.create_date = timezone.now()
                 logger.error("date time pass")
+                payment_method.color = request.POST['color']
                 payment_method.save()
 
                 return redirect('setup')
             except:
-                return render(request, 'setup.html', {'error': 'All field are required, please check your inputs.'})
+                return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id, error_ind=1))
         else:
-            return render(request, 'accounts/signup.html', {'error': 'password must match'})
+            return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id, error_ind=1))
     else:
-        return render(request, 'accounts/signup.html')
+        return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id, error_ind=1))
 
 @login_required
 def paymentmethodmodify_page(request,pm_id):
@@ -96,37 +103,40 @@ def paymentmethodmodify_page(request,pm_id):
 def paymentmethodmodify(request):
     logger = logging.getLogger(__name__)
     logger.error("it is in")
-    if request.method == 'POST':
-        logger.error("it is post")
-        if request.POST['description'] and request.POST['credit_limit'] and request.POST['status']:
-            logger.error(request.POST['id'])
-            logger.error(request.POST['description'])
-            logger.error(request.POST['credit_limit'])
-            logger.error(request.POST['status'])
-            try:
+    try:
+        if request.method == 'POST':
 
-                payment_method = get_object_or_404(PaymentMethod,pk=request.POST['id'])
-                if payment_method:
-                    payment_method.method_name=request.POST['description']
-                    if request.POST['status'] == 'Active':
-                        payment_method.status = 1
-                    else:
-                        payment_method.status = 0
+                logger.error("it is post")
+                if request.POST['description'] and request.POST['credit_limit'] and request.POST['status']:
+                    logger.error(request.POST['id'])
+                    logger.error(request.POST['description'])
+                    logger.error(request.POST['credit_limit'])
+                    logger.error(request.POST['status'])
+                    payment_method = get_object_or_404(PaymentMethod,pk=request.POST['id'])
+                    if payment_method:
+                        payment_method.method_name=request.POST['description']
+                        if request.POST['status'] == 'Active':
+                            payment_method.status = 1
+                        else:
+                            payment_method.status = 0
 
-                    payment_method.credit_limit=request.POST['credit_limit']
+                        payment_method.credit_limit=request.POST['credit_limit']
 
-                    payment_method.account_id = request.user.id
+                        payment_method.account_id = request.user.id
 
-                    payment_method.create_date = timezone.now()
+                        payment_method.create_date = timezone.now()
+                        if request.POST['color']:
+                            payment_method.color = request.POST['color']
+                        else:
+                            payment_method.color = ''
+                        payment_method.save()
+                        return redirect('setup')
+                else:
+                    return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id,error_ind=1))
+    except:
+        return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id, error_ind=1))
 
-                    payment_method.save()
-                    return redirect('setup')
-            except:
-                    return render(request, 'setup.html', {'error': 'error occurred while saving records'})
 
-@login_required
-def locationModify_page(request):
-    pass
 @login_required
 def location_setup(request):
     logger = logging.getLogger(__name__)
@@ -171,7 +181,7 @@ def location_setup(request):
                 location.save()
                 return redirect('setup')
             except:
-                return render(request, 'setup.html', {'error': 'Please check your inputs and try again.'})
+                return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id, error_ind=1))
 @login_required
 def location_setup_page(request):
     return render(request, 'accounts/location_setup.html')
@@ -220,9 +230,9 @@ def location_modify(request):
                 location.save()
                 return redirect('setup')
             else:
-                return render(request, 'setup.html', {'error': 'Please check your inputs and try again.'})
+                return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id,error_ind=1))
         except:
-            return render(request, 'setup.html', {'error': 'Please check your inputs and try again.'})
+            return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id, error_ind=1))
 
 
 @login_required
@@ -249,7 +259,7 @@ def transaction_type_setup(request):
             type.save()
             return redirect('setup')
         else:
-            return render(request, 'setup.html', {'error': 'Please check your inputs and try again.'})
+            return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id, error_ind=1))
 
 @login_required
 def transaction_type_modify_page(request,type_id):
@@ -280,6 +290,28 @@ def transaction_type_modify(request):
                 type.save()
                 return redirect('setup')
             else:
-                return render(request, 'setup.html', {'error': 'Please check your inputs and try again.'})
+                return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id, error_ind=1))
         except:
-            return render(request, 'setup.html', {'error': 'Please check your inputs and try again.'})
+            return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id, error_ind=1))
+
+@login_required
+def add_transaction(request):
+    logger = logging.getLogger(__name__)
+    logger.error("entered")
+    # logger.error(PaymentMethod.objects.get(request.POST['transaction_payment_method']))
+    if request.method == 'POST':
+        # try:
+            if request.POST['transaction_date'] and request.POST['transaction_amount'] and request.POST['transaction_payment_method'] and request.POST['transaction_payment_location'] and request.POST['transaction_type']:
+                transaction = Transaction()
+                transaction.tran_date = request.POST['transaction_date']
+                transaction.tran_amount = request.POST['transaction_amount']
+                transaction.tran_payment_method = PaymentMethod.objects.get(pk=request.POST['transaction_payment_method'])
+                transaction.tran_location = Location.objects.get(pk=request.POST['transaction_payment_location'])
+                transaction.tran_type = TransactionType.objects.get(pk=request.POST['transaction_type'])
+                transaction.account_id = request.user.id
+                transaction.save()
+                return redirect('home')
+        #     else:
+        #         return render(request, 'home.html', {'error': 'Please check your inputs and try again.'})
+        # except:
+        #     return render(request, 'home.html', {'error': 'Please check your inputs and try again.'})

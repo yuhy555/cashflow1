@@ -7,7 +7,7 @@
         <div class="col">
               <form method="POST" action="{% url 'transaction_type_setup' %}">
              {% csrf_token %}
-              <h5 class="form-signin-heading text-center text-success">Payment Method</h5>
+              <h5 class="form-signin-heading text-center text-success">Transaction Type Setup</h5>
                     <br />
               <input type="text" class="form-control" id="description_input" name="description"  placeholder="description" required="" style="margin-top:10px"/>
               <select class="form-control" id="income_indicator" name="income_indicator" style="margin-top:10px">

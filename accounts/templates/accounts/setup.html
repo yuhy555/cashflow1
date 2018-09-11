@@ -9,27 +9,36 @@
 <div class="container text-center mt-5">
 
     <h2>Your Cards</h2>
+    <h6> By Setting up a card in CashFlow, you can track the expenses of it and also analyze how you money was spent. A card in CF is the same as a CC
+    card or a debit card. You don't need to enter your credit card number, but make sure you name them clearly so that you
+    know which card it is referring to.</h6>
     <div class="row mt-4">
-        <div class="col-2">
+        <div class="col-3 mt-2">
             <a href="{% url 'paymentmethodsetup_page' %}" class="btn btn-primary" role="button">Add New Card</a>
         </div>
         {% for pm in payment_methods.all %}
-        <div class="col-2">
+        <div class="col-3 mt-2">
             {% if pm.status == 1%}
-                <a class="btn btn-outline-success " href="{% url 'paymentmethodmodify_page' pm.id %}">{{pm.method_name}}</a>
+                <a class="btn btn-outline-success " style="background-color:{{pm.color}}" href="{% url 'paymentmethodmodify_page' pm.id %}">{{pm.method_name}}</a>
             {% else%}
                 <a class="btn btn-secondary " href="{% url 'paymentmethodmodify_page' pm.id %}">{{pm.method_name}}</a>
             {% endif %}
         </div>
         {% endfor %}
     </div>
+    <br />
+    <br />
+    <br />
+    <br />
     <h2 class="mt-4">Your Places</h2>
+    <h6> A place in CashFlow is the store where you spend your money, such as Walmart, Superstore, Canadiantire, Amazon and
+     even another Walmart at a different address. Setting up places can help analyze where and what kind of stores you spend your money on.</h6>
     <div class="row mt-4">
-        <div class="col-2">
+        <div class="col-3 mt-2">
             <a href="{% url 'location_setup_page' %}" class="btn btn-primary" role="button">Add New Place</a>
         </div>
         {% for location in locations.all %}
-        <div class="col-2">
+        <div class="col-3 mt-2">
             {% if location.status == 1%}
                 <a class="btn btn-outline-success " href="{% url 'location_modify_page' location.id %}">{{location.name}}</a>
             {% else%}
@@ -38,13 +47,19 @@
         </div>
         {% endfor %}
     </div>
+    <br />
+    <br />
+    <br />
+    <br />
     <h2 class="mt-4">Your Types</h2>
+    <h6>A type in CashFlow is the property of a transaction, such as grocery expenses and make-up expenses. This field is used to
+     help analyze what kind of expenses you have the most.</h6>
     <div class="row mt-4">
-        <div class="col-2">
+        <div class="col-3 mt-2">
             <a href="{% url 'transaction_type_setup_page' %}" class="btn btn-primary" role="button">Add New Type</a>
         </div>
         {% for type in types.all %}
-        <div class="col-2">
+        <div class="col-3 mt-2">
             {% if type.status == 1%}
                 <a class="btn btn-outline-success " href="{% url 'transaction_type_modify_page' type.id %}">{{type.name}}</a>
             {% else%}
@@ -68,7 +83,7 @@
 
 
 <!--</script>-->
-</div>
+
 
 
 

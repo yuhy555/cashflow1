@@ -11,6 +11,16 @@
                     <br />
               <input type="text" class="form-control" id="description_input" name="description"  required="" style="margin-top:10px"/>
               <input type="text" class="form-control" id="credit_limit_input" name="credit_limit"  placeholder="Credit Limit" required="" style="margin-top:10px"/>
+
+
+              <input type="text" class="form-control" id="color" name="color"  placeholder="Choose a preference color below for this card"  style="margin-top:10px"/>
+              <br />
+              <input type="text" id="color_picker" style="with:200px" />
+              <script>
+               $("#color_picker").spectrum({
+                color: "#f00"});
+            </script>
+
               <select class="form-control" id="status_input" name="status" style="margin-top:10px">
                   <option>Active</option>
                   <option>Inactive</option>
@@ -28,5 +38,12 @@
     </div>
 
 </div>
-
+<script>
+    $("#color_picker").spectrum({
+        change: function(color){
+           $("#color").val(color.toHexString());
+        }
+    });
+</script>
 {% endblock %}
+

@@ -25,5 +25,5 @@ urlpatterns = [
     path('transaction-type/<int:type_id>',views.transaction_type_modify_page,name='transaction_type_modify_page'),
     path('transaction_type_modify',views.transaction_type_modify,name='transaction_type_modify'),
 
-
+    path('add_transaction',views.add_transaction,name='add_transaction'),
 ]

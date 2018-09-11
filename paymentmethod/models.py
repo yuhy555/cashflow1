@@ -6,5 +6,6 @@ class PaymentMethod(models.Model):
     status = models.IntegerField(default=1) #0:inactive 1:active
     credit_limit=models.CharField(max_length=50)
     account = models.ForeignKey(User, on_delete=models.CASCADE,default='')
+    color = models.CharField(max_length=50,default='')
     create_date = models.DateTimeField()
 

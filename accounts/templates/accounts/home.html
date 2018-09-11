@@ -2,28 +2,31 @@
 
 {% block content %}
 
-    <div class="row">
-    <div class="col-3 bg-primary .pre-scrollable">
-        <form method="POST" action="{% url 'signup' %}">
+    <div class="row mt-4">
+    <div class="col-3 .pre-scrollable">
+        <form method="POST" action="{% url 'add_transaction' %}">
          {% csrf_token %}
       <h5 class="form-signin-heading text-center text-success">New Transaction</h5>
+            {% if error %}
+                {{ error }}
+            {% endif %}
             <br />
       <input type="datetime-local" class="form-control" name="transaction_date"  required="" autofocus="" style="margin-top:10px"/>
       <input type="text" class="form-control" name="transaction_amount"  placeholder="0.00" required="" style="margin-top:10px"/>
       <select class="form-control" name="transaction_payment_method"  style="margin-top:10px">
-          <option>VISA</option>
-          <option>MC</option>
-          <option>AMEX</option>
+          {% for pm in payment_methods%}
+          <option value="{{pm.id}}">{{pm.method_name}}</option>
+          {% endfor %}
       </select>
        <select class="form-control" name="transaction_payment_location"  style="margin-top:10px">
-          <option>TNT</option>
-          <option>Walmart</option>
-          <option>Costco</option>
+          {% for location in locations%}
+          <option value="{{location.id}}">{{location.name}}</option>
+          {% endfor %}
       </select>
        <select class="form-control" name="transaction_type"  style="margin-top:10px">
-          <option>Loan</option>
-          <option>Snacks</option>
-          <option>Grocery</option>
+          {% for type in types %}
+          <option value="{{type.id}}">{{type.name}}</option>
+          {% endfor %}
       </select>
 
 
@@ -33,18 +36,33 @@
     </form>
 
     </div>
-    <div class="col-9 bg-success">
-                <p>main column</p>
-                <p>main column</p>
-                <p>main column</p>
-                <p>main column</p>
-                <p>main column</p>
-                <p>main column</p>
-                <p>main column</p>
-                <p>main column</p>
-                <p>main column</p>
-                <p>main column</p>
+        <div class="col-9 ">
 
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Transaction Date</th>
+          <th scope="col">Amount</th>
+          <th scope="col">Card</th>
+          <th scope="col">Place</th>
+          <th scope="col">Type</th>
+        </tr>
+      </thead>
+
+      <tbody>
+      {% for transaction in transactions %}
+        <tr class="transaction_row" style="background-color:{{transaction.tran_payment_method.color}}">
+          <td>{{transaction.id}}</td>
+          <td>{{transaction.pub_date_pretty}}</td>
+          <td>{{transaction.tran_amount}}</td>
+          <td>{{transaction.tran_payment_method.method_name}}</td>
+          <td>{{transaction.tran_location.name}}</td>
+          <td>{{transaction.tran_type.name}}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
 
 
     </div>

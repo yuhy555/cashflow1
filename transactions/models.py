@@ -14,3 +14,7 @@ class Transaction(models.Model):
     tran_type = models.ForeignKey(TransactionType,on_delete=models.SET_NULL,null=True)
     account = models.ForeignKey(User,on_delete=models.CASCADE,default='')
     create_date = models.DateTimeField(auto_now_add=True, blank=True)
+
+
+    def pub_date_pretty(self):
+        return self.tran_date.strftime('%b %e %Y %I:%M %p')
