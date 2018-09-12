@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if error %}
+    {{ error }}
+{% endif %}
+<div class="container text-center mt-5">
+    <div class="row">
+        <div class="col">
+              <form method="POST" action="{% url 'transaction_modify' %}">
+             {% csrf_token %}
+              <h5 class="form-signin-heading text-center text-success">Transaction Detail</h5>
+                    <br />
+              <input type="hidden" class="form-control" name="id" value="{{transaction.id}}" />
+              <input type="datetime-local" class="form-control" name="transaction_date"  value ="{{transaction.datetime_local_value_format}}"required="" autofocus="" style="margin-top:10px"/>
+              <input type="text" class="form-control" id="transaction_amount" name="transaction_amount"  value="{{transaction.tran_amount}}" style="margin-top:10px"/>
+              <select class="form-control" name="transaction_payment_method"  style="margin-top:10px">
+                  {% for pm in payment_methods %}
+                    {% if pm.id == transaction.tran_payment_method.id%}
+                    <option  selected="selected" value="{{pm.id}}">{{pm.method_name}}</option>
+                  {% else %}
+                    <option  value="{{pm.id}}">{{pm.method_name}}</option>
+                  {% endif %}
+                  {% endfor %}
+              </select>
+              <select class="form-control" name="transaction_payment_location"  style="margin-top:10px">
+                  {% for location in locations %}
+                  {% if location.id == transaction.tran_location.id%}
+                    <option selected="selected" value="{{location.id}}">{{location.name}}</option>
+                  {% else %}
+                    <option  value="{{location.id}}">{{location.name}}</option>
+                  {% endif %}
+                  {% endfor %}
+              </select>
+              <select class="form-control" name="transaction_type"  style="margin-top:10px">
+                  {% for type in types %}
+                   {% if type.id == transaction.tran_type.id%}
+                    <option selected="selected" value="{{type.id}}">{{type.name}}</option>
+                  {% else %}
+                    <option  value="{{type.id}}">{{type.name}}</option>
+                  {% endif %}
+                  {% endfor %}
+              </select>
+                  <br />
+
+              <button class="btn btn-lg btn-warning btn-block text-primary" name="save" type="submit"  style="margin-top:10px">Save Changes</button>
+              <button class="btn btn-lg btn-danger btn-block text-warning" name="delete" type="submit"  style="margin-top:10px">Delete</button>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

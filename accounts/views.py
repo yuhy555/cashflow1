@@ -18,6 +18,7 @@ def signup(request):
                 return render(request, 'accounts/signup.html',{'error': 'username not available'})
             except User.DoesNotExist:
                 user= User.objects.create_user(request.POST['username'],password=request.POST['password1'])
+                common.create_default_entries(user.id);
                 auth.login(request,user)
                 return redirect('home')
         else:
@@ -41,17 +42,14 @@ def logout(request):
         auth.logout(request)
         return redirect('home')
 
-@login_required
+# @login_required
 def home(request):
-    # payment_methods = PaymentMethod.objects.filter(account=request.user.id,status=1)
-    # locations = Location.objects.filter(account=request.user.id,status=1)
-    # types = TransactionType.objects.filter(account=request.user.id,status=1)
-    # transactions = Transaction.objects.filter(account=request.user.id).select_related()
-    return render(request,'accounts/home.html',common.home_data_load(request.user.id))
+    print(request.user.id)
+    if request.user.id:
+        return render(request,'accounts/home.html',common.home_data_load(request.user.id))
+    else:
+        return redirect('login')
 def setup(request):
-    # payment_methods = PaymentMethod.objects.filter(account=request.user.id)
-    # locations = Location.objects.filter(account=request.user.id)
-    # types = TransactionType.objects.filter(account=request.user.id)
     return render(request,'accounts/setup.html',common.setup_data_load(request.user.id))
 def myaccount(request):
     return render(request,'accounts/myaccount.html')
@@ -104,7 +102,7 @@ def paymentmethodmodify(request):
     logger = logging.getLogger(__name__)
     logger.error("it is in")
     try:
-        if request.method == 'POST':
+        if request.method == 'POST' and 'save' in request.POST:
 
                 logger.error("it is post")
                 if request.POST['description'] and request.POST['credit_limit'] and request.POST['status']:
@@ -133,6 +131,14 @@ def paymentmethodmodify(request):
                         return redirect('setup')
                 else:
                     return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id,error_ind=1))
+        else:
+            if request.method == 'POST' and 'delete' in request.POST:
+                print("delete")
+                try:
+                    PaymentMethod.objects.filter(pk=request.POST['id']).delete()
+                    return redirect('setup')
+                except:
+                    return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id, error_ind=1))
     except:
         return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id, error_ind=1))
 
@@ -191,7 +197,7 @@ def location_modify_page(request,location_id):
     return render(request,'accounts/location-modify.html',{'location':record})
 @login_required
 def location_modify(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and "save" in request.POST:
         try:
             if request.POST['description'] and request.POST['status']:
                 location = get_object_or_404(Location,pk=request.POST['id'])
@@ -233,7 +239,14 @@ def location_modify(request):
                 return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id,error_ind=1))
         except:
             return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id, error_ind=1))
-
+    else:
+        if request.method == 'POST' and "delete" in request.POST:
+            try:
+                print ("delete")
+                Location.objects.filter(pk=request.POST['id']).delete()
+                return redirect ('setup')
+            except:
+                return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id, error_ind=1))
 
 @login_required
 def transaction_type_setup_page(request):
@@ -268,17 +281,11 @@ def transaction_type_modify_page(request,type_id):
 
 @login_required
 def transaction_type_modify(request):
-    logger = logging.getLogger(__name__)
-    if request.method == 'POST':
-        logger.error("entered")
+    if request.method == 'POST' and "save" in request.POST:
         try:
-
-            logger.error(request.POST['income_indicator'])
             if request.POST['description'] and request.POST['income_indicator'] and request.POST['status']:
-
                 type = get_object_or_404(TransactionType,pk=request.POST['id'])
                 type.name = request.POST['description']
-                logger.error(request.POST['description'])
                 if request.POST['income_indicator'] == 'Income':
                     type.income_ind = 2
                 elif request.POST['income_indicator'] == 'Expense':
@@ -292,15 +299,20 @@ def transaction_type_modify(request):
             else:
                 return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id, error_ind=1))
         except:
-            return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id, error_ind=1))
+           return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id, error_ind=1))
+    else:
+        if request.method == 'POST' and "delete" in request.POST:
+            try:
+                TransactionType.objects.filter(pk=request.POST['id']).delete()
+                return redirect ("setup")
+            except:
+                return render(request, 'accounts/setup.html', common.setup_data_load(request.user.id, error_ind=1))
 
 @login_required
 def add_transaction(request):
-    logger = logging.getLogger(__name__)
-    logger.error("entered")
-    # logger.error(PaymentMethod.objects.get(request.POST['transaction_payment_method']))
+
     if request.method == 'POST':
-        # try:
+        try:
             if request.POST['transaction_date'] and request.POST['transaction_amount'] and request.POST['transaction_payment_method'] and request.POST['transaction_payment_location'] and request.POST['transaction_type']:
                 transaction = Transaction()
                 transaction.tran_date = request.POST['transaction_date']
@@ -311,7 +323,42 @@ def add_transaction(request):
                 transaction.account_id = request.user.id
                 transaction.save()
                 return redirect('home')
-        #     else:
-        #         return render(request, 'home.html', {'error': 'Please check your inputs and try again.'})
-        # except:
-        #     return render(request, 'home.html', {'error': 'Please check your inputs and try again.'})
+            else:
+                return render(request, 'accounts/home.html', common.home_data_load(request.user.id,1))
+        except:
+            return render(request, 'accounts/home.html', common.home_data_load(request.user.id, 1))
+@login_required
+def transaction_modify_page(request,pm_id):
+    try:
+        return render(request,'accounts/transaction-detail.html',common.transaction_modify_load(request.user.id,pm_id))
+    except:
+        return render(request,'accounts/home.html',common.home_data_load(request.user.id,error_ind=0))
+@login_required
+def transaction_modify(request):
+    if request.method == 'POST' and "save" in request.POST:
+        try:
+            if request.POST['transaction_date'] and request.POST['transaction_amount'] and request.POST['transaction_payment_method'] and request.POST['transaction_payment_location'] and request.POST['transaction_type']:
+                transaction = get_object_or_404(Transaction,pk=request.POST['id'])
+                transaction.tran_date = request.POST['transaction_date']
+                transaction.tran_amount = request.POST['transaction_amount']
+                transaction.tran_payment_method = PaymentMethod.objects.get(
+                    pk=request.POST['transaction_payment_method'])
+                print(transaction.tran_payment_method)
+                transaction.tran_location = Location.objects.get(pk=request.POST['transaction_payment_location'])
+                transaction.tran_type = TransactionType.objects.get(pk=request.POST['transaction_type'])
+                transaction.save()
+                return redirect('home')
+            else:
+                return render(request, 'accounts/transaction-detail.html',
+                              common.transaction_modify_load(request.user.id, request.POST['id']))
+        except:
+
+            return render(request, 'accounts/transaction-detail.html',
+                          common.transaction_modify_load(request.user.id,request.POST['id']))
+    else:
+        if request.method=='POST' and "delete" in request.POST:
+            try:
+                Transaction.objects.filter(pk=request.POST['id']).delete()
+                return redirect ('home')
+            except:
+                return render(request, 'accounts/home.html', common.home_data_load(request.user.id, 1))

@@ -10,12 +10,12 @@
               <h5 class="form-signin-heading text-center text-success">Location Setup</h5>
                     <br />
               <input type="hidden" class="form-control" name="id" value="{{location.id}}" />
-              <input type="text" class="form-control" id="description_input" name="description" placeholder="Location Name - required" value={{location.name}} required="" style="margin-top:10px"/>
-              <input type="text" class="form-control" id="street" name="street"  placeholder="street" value={{location.street}} style="margin-top:10px"/>
-              <input type="text" class="form-control" id="city" name="city"  placeholder="city" value={{location.city}} style="margin-top:10px"/>
-              <input type="text" class="form-control" id="province" name="province"  placeholder="Province/State" value={{location.province}} style="margin-top:10px"/>
-              <input type="text" class="form-control" id="country" name="country"  placeholder="Country" value={{location.country}} style="margin-top:10px"/>
-              <input type="text" class="form-control" id="postal_code" name="postal_code"  placeholder="Postal Code/Zip Code" value={{location.postal_code}} style="margin-top:10px"/>
+              <input type="text" class="form-control" id="description_input" name="description" placeholder="Location Name - required" value="{{location.name}}" required="" style="margin-top:10px"/>
+              <input type="text" class="form-control" id="street" name="street"  placeholder="street" value="{{location.street}}" style="margin-top:10px"/>
+              <input type="text" class="form-control" id="city" name="city"  placeholder="city" value="{{location.city}}" style="margin-top:10px"/>
+              <input type="text" class="form-control" id="province" name="province"  placeholder="Province/State" value="{{location.province}}" style="margin-top:10px"/>
+              <input type="text" class="form-control" id="country" name="country"  placeholder="Country" value="{{location.country}}" style="margin-top:10px"/>
+              <input type="text" class="form-control" id="postal_code" name="postal_code"  placeholder="Postal Code/Zip Code" value="{{location.postal_code}}" style="margin-top:10px"/>
               <select class="form-control" id="status_input" name="status" style="margin-top:10px">
                   {% if location.status == 1 %}
                   <option selected="selected">Active</option>
@@ -30,7 +30,8 @@
 
 
 
-              <button class="btn btn-lg btn-warning btn-block text-primary" type="submit" value="Add" style="margin-top:10px">Add</button>
+              <button class="btn btn-lg btn-warning btn-block text-primary" name="save" type="submit"  style="margin-top:10px">Add</button>
+              <button class="btn btn-lg btn-danger btn-block text-warning" name="delete" type="submit" style="margin-top:10px">Delete</button>
             </form>
 
         </div>

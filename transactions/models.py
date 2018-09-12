@@ -18,3 +18,6 @@ class Transaction(models.Model):
 
     def pub_date_pretty(self):
         return self.tran_date.strftime('%b %e %Y %I:%M %p')
+
+    def datetime_local_value_format(self):
+        return self.tran_date.strftime('%Y-%m-%dT%H:%M')

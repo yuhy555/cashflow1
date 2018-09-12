@@ -13,7 +13,8 @@ def home_data_load(user_id,error_ind=None):
     payment_methods = PaymentMethod.objects.filter(account=user_id, status=1)
     locations = Location.objects.filter(account=user_id, status=1)
     types = TransactionType.objects.filter(account=user_id, status=1)
-    transactions = Transaction.objects.filter(account=user_id).select_related()
+    transactions = Transaction.objects.filter(account=user_id).select_related().order_by('-tran_date')
+    print (transactions)
     if error_ind is not None:
         error = "error occurred while saving records"
         return {'payment_methods':payment_methods,'locations':locations,"types":types,'transactions':transactions,'error':error}
@@ -29,3 +30,34 @@ def setup_data_load(user_id,error_ind=None):
         return {'payment_methods':payment_methods,'locations':locations,"types":types,'error':error}
     else:
         return {'payment_methods': payment_methods, 'locations': locations, "types": types}
+def create_default_payment_method(user_id):
+    payment_method = PaymentMethod()
+    payment_method.method_name = 'TD VISA ****1234'
+    payment_method.credit_limit = 1000
+    payment_method.account_id = user_id
+    payment_method.status   =1
+    payment_method.create_date = timezone.now()
+    payment_method.save()
+def create_default_location(user_id):
+    location = Location()
+    location.name = 'SaveonFood'
+    location.status = 1
+    location.account_id = user_id
+    location.save()
+def create_default_type(user_id):
+    type = TransactionType()
+    type.name = 'Grocery'
+    type.income_ind = 1
+    type.status = 1
+    type.account_id = user_id
+    type.save()
+def create_default_entries(user_id):
+    create_default_payment_method(user_id)
+    create_default_location(user_id)
+    create_default_type(user_id)
+
+def transaction_modify_load(user_id,tran_id):
+    record = get_object_or_404(Transaction, pk=tran_id)
+    setup = setup_data_load(user_id)
+    setup["transaction"] = record
+    return setup
