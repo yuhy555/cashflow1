@@ -52,7 +52,10 @@ def home(request):
 def setup(request):
     return render(request,'accounts/setup.html',common.setup_data_load(request.user.id))
 def myaccount(request):
-    return render(request,'accounts/myaccount.html')
+    data = common.home_data_load(request.user.id)
+    transactions = data['transactions']
+    # transactions = common.transform_transctions(transactions)
+    return render(request,'accounts/myaccount.html',{'data': transactions})
 
 @login_required
 def paymentmethodsetup_page(request):
@@ -362,3 +365,5 @@ def transaction_modify(request):
                 return redirect ('home')
             except:
                 return render(request, 'accounts/home.html', common.home_data_load(request.user.id, 1))
+
+

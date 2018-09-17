@@ -28,4 +28,6 @@ urlpatterns = [
     path('add_transaction',views.add_transaction,name='add_transaction'),
     path('transactions/<int:pm_id>',views.transaction_modify_page,name='transaction_modify_page'),
     path('transaction-modify',views.transaction_modify,name='transaction_modify'),
+
+
 ]
