@@ -110,8 +110,11 @@ def map_date(tran_summary, date_range):
         result.append(0)
         index=index+1
     for value in tran_summary:
+        print (value)
         if value['tran_date'] in date_range:
-            result[date_range.index(value['tran_date'])]=value['total']
+            print("in range")
+            print (date_range.index(value['tran_date']))
+            result[date_range.index(value['tran_date'])-1]=value['total']
     return result
 
 def get_transaction_type_desc(tran_type_id):
@@ -129,7 +132,7 @@ def get_tran_category_summary_date(user_id):
             print(item['tran_type'])
             if get_transaction_type_desc(item['tran_type']):
                 item['tran_type']=get_transaction_type_desc(item['tran_type'])
-                print (item)
+                # print (item)
         return record
     except:
         return None
