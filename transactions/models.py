@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 
 class Transaction(models.Model):
-    tran_date = models.DateTimeField()
+    tran_date = models.DateField()
     tran_amount = models.FloatField(default=0.00)
     tran_payment_method = models.ForeignKey(PaymentMethod,on_delete=models.SET_NULL,null=True)
     tran_location = models.ForeignKey(Location,on_delete=models.SET_NULL,null=True)
@@ -21,3 +21,6 @@ class Transaction(models.Model):
 
     def datetime_local_value_format(self):
         return self.tran_date.strftime('%Y-%m-%dT%H:%M')
+
+    def report_tran_date_MMDDYYYY(self):
+        return self.tran_date.strftime('%m/%d/%Y')

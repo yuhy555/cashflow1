@@ -8,7 +8,10 @@ import logging
 from transactiontype.models import TransactionType
 from location.models import Location
 from transactions.models import Transaction
+from django.db.models import Sum
 import json
+import datetime
+from datetime import timedelta
 def home_data_load(user_id,error_ind=None):
     payment_methods = PaymentMethod.objects.filter(account=user_id, status=1)
     locations = Location.objects.filter(account=user_id, status=1)
@@ -77,4 +80,57 @@ def transform_transctions(transactions):
         result.append({"year":year,"month":month,"day":day,"amount":transaction.tran_amount})
     return json.dumps(result)
 
+def format_tran_date(source):
+    # print (source.strftime('%m/%d/%Y'))
+    return source.strftime('%m/%d/%Y')
+
+def get_tran_summary_date(user_id):
+    try:
+        record = Transaction.objects.values('tran_date').annotate(total=Sum('tran_amount')).filter(account=user_id).order_by('tran_date')
+        for item in record:
+            item['tran_date'] = format_tran_date(item['tran_date'])
+        return record
+    except:
+        return None
+
+def get_x_axis_dates():
+        today = datetime.datetime.today()
+        start_date = today + datetime.timedelta(-30)
+        date_array = (start_date + datetime.timedelta(days=x) for x in range(0, (today - start_date).days+1))
+        result=[]
+        for date in date_array:
+            result.append(format_tran_date(date))
+        # print (result)
+        return result
+#
+def map_date(tran_summary, date_range):
+    result=[]
+    index=0
+    while index < len(date_range)-1:
+        result.append(0)
+        index=index+1
+    for value in tran_summary:
+        if value['tran_date'] in date_range:
+            result[date_range.index(value['tran_date'])]=value['total']
+    return result
+
+def get_transaction_type_desc(tran_type_id):
+    try:
+        record = get_object_or_404(TransactionType, pk=tran_type_id)
+        return record.name
+    except:
+        return None
+
+def get_tran_category_summary_date(user_id):
+    try:
+        record = Transaction.objects.values('tran_type').annotate(total=Sum('tran_amount')).filter(account=user_id).order_by('tran_type')
+        for item in record:
+            # item['tran_type'] = format_tran_date(item['tran_date'])
+            print(item['tran_type'])
+            if get_transaction_type_desc(item['tran_type']):
+                item['tran_type']=get_transaction_type_desc(item['tran_type'])
+                print (item)
+        return record
+    except:
+        return None
 

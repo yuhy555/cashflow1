@@ -44,7 +44,7 @@ def logout(request):
 
 # @login_required
 def home(request):
-    print(request.user.id)
+    # print(request.user.id)
     if request.user.id:
         return render(request,'accounts/home.html',common.home_data_load(request.user.id))
     else:
@@ -52,10 +52,12 @@ def home(request):
 def setup(request):
     return render(request,'accounts/setup.html',common.setup_data_load(request.user.id))
 def myaccount(request):
-    data = common.home_data_load(request.user.id)
-    transactions = data['transactions']
-    # transactions = common.transform_transctions(transactions)
-    return render(request,'accounts/myaccount.html',{'data': transactions})
+    data = common.get_tran_summary_date(request.user.id)
+    date_range_x_axis = common.get_x_axis_dates()
+    category_summary = common.get_tran_category_summary_date(request.user.id)
+
+    data_map = common.map_date(data,date_range_x_axis)
+    return render(request,'accounts/myaccount.html',{'data': data,'range':date_range_x_axis,'mapping':data_map,'category_summary':category_summary})
 
 @login_required
 def paymentmethodsetup_page(request):

@@ -12,7 +12,7 @@
               <h5 class="form-signin-heading text-center text-success">Transaction Detail</h5>
                     <br />
               <input type="hidden" class="form-control" name="id" value="{{transaction.id}}" />
-              <input type="datetime-local" class="form-control" name="transaction_date"  value ="{{transaction.datetime_local_value_format}}"required="" autofocus="" style="margin-top:10px"/>
+              <input type="date" class="form-control" name="transaction_date"  value ="{{transaction.datetime_local_value_format}}"required="" autofocus="" style="margin-top:10px"/>
               <input type="text" class="form-control" id="transaction_amount" name="transaction_amount"  value="{{transaction.tran_amount}}" style="margin-top:10px"/>
               <select class="form-control" name="transaction_payment_method"  style="margin-top:10px">
                   {% for pm in payment_methods %}

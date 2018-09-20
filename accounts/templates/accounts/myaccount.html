@@ -3,8 +3,9 @@
 {% block content %}
 
 <br>
-    <div class="container">
-        <h3 class="text-center">My Trend</h3>
+    <div class="container text-center">
+        <h3>My Trend</h3>
+        <h5>Your expenses for the last 30 days, summarized by each day.</h5>
         <div style="width:100%;">
             <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
                 <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
@@ -12,15 +13,130 @@
                     </div>
                 </div>
                 <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
-            <canvas id="canvas" width="888" height="444" class="chartjs-render-monitor" style="display: block; width: 888px; height: 444px;"></canvas>
+            <canvas id="summarize_by_day" width="888" height="444" class="chartjs-render-monitor" style="display: block; width: 888px; height: 444px;"></canvas>
+            <br />
+            <br />
+            <h5>Your expenses of each category since the beginning of time</h5>
+            <canvas id="summarize_by_category" class="chartjs" width="770" height="385" style="display: block; width: 770px; height: 385px;"></canvas>
+            <br />
+            <br />
+            <h5>Your expenses ratio of each category</h5>
+            <canvas id="summary_expense_rate" class="chartjs" width="770" height="385" style="display: block; width: 770px; height: 385px;"></canvas>
+
         </div>
     </div>
-    <script>var tran_list=[]</script>
-    {% for transaction in data %}
-        <script>tran_list.push("{{transaction.tran_date}}")</script>
+    <script>
+
+        var tran_list=[]
+        var total_list=[]
+        var x_axis=[]
+        var mapping_list=[]
+
+        category_list=[]
+        category_total=[]
+    </script>
+    {% for transaction_summary in data %}
+        <script>
+            tran_list.push("{{transaction_summary.tran_date}}")
+            total_list.push("{{transaction_summary.total}}")
+        </script>
+    {% endfor %}
+    {% for value in range%}
+        <script>
+            x_axis.push("{{value}}")
+        </script>
+    {% endfor %}
+    {% for value in mapping%}
+        <script>
+            mapping_list.push("{{value}}")
+        </script>
+    {% endfor %}
+    {% for item in category_summary%}
+        <script>
+            category_list.push("{{item.tran_type}}");
+            category_total.push("{{item.total}}")
+        </script>
     {% endfor %}
     <script>
-        console.log(tran_list);
+        new Chart(document.getElementById("summarize_by_day"), {
+          type: 'line',
+          data: {
+            labels: x_axis,
+            datasets: [{
+                data: mapping_list,
+                label: "Total:",
+                borderColor: "#3e95cd",
+                fill: true
+              },
+            ]
+          },
+          options: {
+            title: {
+              display: true,
+              text: 'Your expense of the last 30 days'
+            }
+          }
+        });
+
+    new Chart(document.getElementById("summarize_by_category"),{
+    type: 'horizontalBar',
+          data: {
+            labels: category_list,
+            datasets: [{
+                data: category_total,
+                label: "Total:",
+                backgroundColor: [
+                    'rgba(0, 99, 132, 0.6)',
+                    'rgba(30, 99, 132, 0.6)',
+                    'rgba(60, 99, 132, 0.6)',
+                    'rgba(90, 99, 132, 0.6)',
+                    'rgba(120, 99, 132, 0.6)',
+                    'rgba(150, 99, 132, 0.6)',
+                    'rgba(180, 99, 132, 0.6)',
+                    'rgba(210, 99, 132, 0.6)',
+                    'rgba(240, 99, 132, 0.6)'],
+                borderColor: [
+                    'rgba(0, 99, 132, 1)',
+                    'rgba(30, 99, 132, 1)',
+                    'rgba(60, 99, 132, 1)',
+                    'rgba(90, 99, 132, 1)',
+                    'rgba(120, 99, 132, 1)',
+                    'rgba(150, 99, 132, 1)',
+                    'rgba(180, 99, 132, 1)',
+                    'rgba(210, 99, 132, 1)',
+                    'rgba(240, 99, 132, 1)'],
+                borderWidth: 2,
+                fill: true
+              },
+            ]
+          },
+          options: {
+            title: {
+              display: true,
+              text: 'Your expense of each category since beginning'
+            }
+          }
+        });
+        new Chart(document.getElementById("summary_expense_rate"), {
+          type: 'doughnut',
+          data: {
+            labels: category_list,
+            datasets: [{
+                data: category_total,
+                label: "Total:",
+                borderColor: "#3e95cd",
+                backgroundColor: ["rgb(255, 99, 132)","rgb(54, 162, 235)","rgb(255, 205, 86)"],
+                fill: true
+              },
+            ]
+          },
+          options: {
+            title: {
+              display: true,
+              text: 'Your expense ratio of each category'
+            }
+          }
+        });
 
     </script>
 
