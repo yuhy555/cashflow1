@@ -132,7 +132,7 @@ def get_tran_category_summary_date(user_id):
             print(item['tran_type'])
             if get_transaction_type_desc(item['tran_type']):
                 item['tran_type']=get_transaction_type_desc(item['tran_type'])
-                # print (item)
+                print (item)
         return record
     except:
         return None

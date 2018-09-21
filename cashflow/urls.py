@@ -18,10 +18,13 @@ from django.urls import path,include
 from accounts import views
 from django.conf import settings
 from django.conf.urls.static import static
-
+from django.conf.urls import handler404, handler500
+from accounts import views as account_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.home, name='home'),
     path('accounts/',include('accounts.urls')),
     # path('products/',include('products.urls')),
 ]
+handler404 = account_views.error_404
+handler500 = account_views.error_500

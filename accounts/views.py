@@ -9,6 +9,17 @@ from transactiontype.models import TransactionType
 from location.models import Location
 from transactions.models import Transaction
 from accounts import common
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib import messages
+
+def error_404(request):
+    data={}
+    return render (request,'accounts/home.html',data)
+def error_500(request):
+    data={}
+    return render (request,'accounts/home.html',data)
+
 def signup(request):
     if request.method=='POST':
         #user wants to sign up
@@ -51,6 +62,7 @@ def home(request):
         return redirect('login')
 def setup(request):
     return render(request,'accounts/setup.html',common.setup_data_load(request.user.id))
+@login_required
 def myaccount(request):
     data = common.get_tran_summary_date(request.user.id)
     date_range_x_axis = common.get_x_axis_dates()
@@ -367,5 +379,33 @@ def transaction_modify(request):
                 return redirect ('home')
             except:
                 return render(request, 'accounts/home.html', common.home_data_load(request.user.id, 1))
+
+@login_required
+def mysettings(request):
+    return render(request,'accounts/settings.html')
+
+@login_required
+def update_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('settings')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'accounts/settings.html', {
+        'form': form
+    })
+        # try:
+        #     if request.POST['old_password'] and request.POST['password1'] and request.POST['password2']:
+        #         current_password = request.user.password
+        #         if current_password == request.POST['old_password']
+        #             user = User.objects.get(id=request.user.id)
+        #             if request.POST['password1']==request.POST['password2']:
+        #                 user.password
 
 

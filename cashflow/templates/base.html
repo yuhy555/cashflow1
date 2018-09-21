@@ -38,17 +38,19 @@
               <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav ml-auto">
                 {% if user.is_authenticated%}
+                    <a class="nav-item nav-link" href="{% url 'home' %}"><span class="oi oi-home"></span>Home</a>
                     <a class="nav-item nav-link" href="{% url 'setup' %}"><span class="oi oi-folder"></span>Setup</a>
-                    <a class="nav-item nav-link" href="{% url 'myaccount' %}"><span class="oi oi-wrench"></span>My Account</a>
-                    <a class="nav-item nav-link" href="javascript:{document.getElementById('logout').submit()}">Logout</a>
+                    <a class="nav-item nav-link" href="{% url 'myaccount' %}"><span class="oi oi-graph"></span>Stats</a>
+                    <a class="nav-item nav-link" href="{% url 'mysettings' %}"><span class="oi oi-wrench"></span>Settings</a>
+                    <a class="nav-item nav-link" href="javascript:{document.getElementById('logout').submit()}"><span class="oi oi-account-logout"></span>Log Out</a>
                     <form id="logout" method="POST" action="{% url 'logout'%}">
                         {%csrf_token%}
                         <input type="hidden"/>
 
                     </form>
                 {% else %}
-                  <a class="nav-item nav-link" href="{% url 'signup' %}">Sign Up</a>
-                  <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+                  <a class="nav-item nav-link" href="{% url 'signup' %}"><span class="oi oi-tag">Sign Up</a>
+                  <a class="nav-item nav-link" href="{% url 'login' %}"><span class="oi oi-account-login">Login</a>
 
                 {% endif %}
                 </div>

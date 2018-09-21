@@ -9,6 +9,7 @@ urlpatterns = [
     path('logout',views.logout, name='logout'),
     path('setup',views.setup,name='setup'),
     path('myaccount',views.myaccount,name='myaccount'),
+    path('settings',views.update_password,name='mysettings'),
 
     path('payment-method-setup-page',views.paymentmethodsetup_page,name='paymentmethodsetup_page'),
     path('payment-method-setup',views.paymentmethodsetup,name='paymentmethodsetup'),
@@ -28,6 +29,10 @@ urlpatterns = [
     path('add_transaction',views.add_transaction,name='add_transaction'),
     path('transactions/<int:pm_id>',views.transaction_modify_page,name='transaction_modify_page'),
     path('transaction-modify',views.transaction_modify,name='transaction_modify'),
+
+    path('settings',views.update_password,name='update_password')
+
+
 
 
 ]
