@@ -26,21 +26,13 @@
         </div>
     </div>
     <script>
-
-        var tran_list=[]
-        var total_list=[]
         var x_axis=[]
         var mapping_list=[]
 
         category_list=[]
         category_total=[]
     </script>
-    {% for transaction_summary in data %}
-        <script>
-            tran_list.push("{{transaction_summary.tran_date}}")
-            total_list.push("{{transaction_summary.total}}")
-        </script>
-    {% endfor %}
+
     {% for value in range%}
         <script>
             x_axis.push("{{value}}")
@@ -53,7 +45,7 @@
     {% endfor %}
     {% for item in category_summary%}
         <script>
-            category_list.push("{{item.tran_type}}");
+            category_list.push("{{item.name}}");
             category_total.push("{{item.total}}")
         </script>
     {% endfor %}

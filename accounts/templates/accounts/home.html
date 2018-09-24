@@ -67,7 +67,11 @@
         <tr class="transaction_row" style="background-color:{{transaction.tran_payment_method.color}}">
             <td><a href="{% url 'transaction_modify_page' transaction.id%}">{{transaction.id}}</a></td>
           <td>{{transaction.pub_date_pretty}}</td>
-          <td>{{transaction.tran_amount}}</td>
+            {% if transaction.tran_type.income_ind == 1 %}
+                <td>-{{transaction.tran_amount}}</td>
+            {% elif transaction.tran_type.income_ind == 2 %}
+                <td>{{transaction.tran_amount}}</td>
+            {% endif %}
           <td>{{transaction.tran_payment_method.method_name}}</td>
           <td>{{transaction.tran_location.name}}</td>
           <td>{{transaction.tran_type.name}}</td>

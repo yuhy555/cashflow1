@@ -67,7 +67,6 @@ def myaccount(request):
     data = common.get_tran_summary_date(request.user.id)
     date_range_x_axis = common.get_x_axis_dates()
     category_summary = common.get_tran_category_summary_date(request.user.id)
-
     data_map = common.map_date(data,date_range_x_axis)
     return render(request,'accounts/myaccount.html',{'data': data,'range':date_range_x_axis,'mapping':data_map,'category_summary':category_summary})
 

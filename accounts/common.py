@@ -11,6 +11,7 @@ from transactions.models import Transaction
 from django.db.models import Sum
 import json
 import datetime
+from django.db import connection
 from datetime import timedelta
 def home_data_load(user_id,error_ind=None):
     payment_methods = PaymentMethod.objects.filter(account=user_id, status=1)
@@ -110,10 +111,10 @@ def map_date(tran_summary, date_range):
         result.append(0)
         index=index+1
     for value in tran_summary:
-        print (value)
+        # print (value)
         if value['tran_date'] in date_range:
-            print("in range")
-            print (date_range.index(value['tran_date']))
+            # print("in range")
+            # print (date_range.index(value['tran_date']))
             result[date_range.index(value['tran_date'])-1]=value['total']
     return result
 
@@ -126,13 +127,23 @@ def get_transaction_type_desc(tran_type_id):
 
 def get_tran_category_summary_date(user_id):
     try:
-        record = Transaction.objects.values('tran_type').annotate(total=Sum('tran_amount')).filter(account=user_id).order_by('tran_type')
+        record = TransactionType.objects.filter(
+            transaction__account_id=user_id,
+            income_ind=1
+        ).annotate(
+                total=Sum('transaction__tran_amount'))
         for item in record:
-            # item['tran_type'] = format_tran_date(item['tran_date'])
-            print(item['tran_type'])
-            if get_transaction_type_desc(item['tran_type']):
-                item['tran_type']=get_transaction_type_desc(item['tran_type'])
-                print (item)
+            print (item.total)
+            print (item.name)
+        # record = Transaction.objects.values('tran_type').\
+        #     annotate(total=Sum('tran_amount')).\
+        #     filter(account=user_id).order_by('tran_type')
+        # for item in record:
+        #     # item['tran_type'] = format_tran_date(item['tran_date'])
+        #     # print(item.tran_type.income_ind)
+        #     if get_transaction_type_desc(item['tran_type']):
+        #         item['tran_type']=get_transaction_type_desc(item['tran_type'])
+        #         # print (item)
         return record
     except:
         return None
