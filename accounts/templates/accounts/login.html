@@ -1,29 +1,43 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
+{% load staticfiles %}
 {% if error %}
     {{ error }}
 <br />
 <br />
 {% endif %}
-<div class="container"
-<h1>Login</h1>
 
-<form method="POST" action="{% url 'login' %}">
-    {% csrf_token %}
-    Email:
-    <br />
-    <input type="text" name="username" />
-    <br />
+<link href="{% static 'accounts/style.css'%}" rel="stylesheet"  />
+<div class="wrapper">
 
-    Password:
-    <br />
-    <input type="password" name="password" />
-    <br />
-    <br />
-    <input class="btn btn-primary" type="submit" value="Login"/>
-</form>
+     <form class="form-signin" method="POST" action="{% url 'login' %}">
+         {% csrf_token %}
+      <h2 class="form-signin-heading">Please Sign In</h2>
+      <input type="email" class="form-control" name="username" placeholder="Email Address" required="" autofocus="" style="margin-top:10px"/>
 
+      <input type="password" class="form-control" name="password" placeholder="Password" required="" style="margin-top:10px"/>
+
+      <button class="btn btn-lg btn-primary btn-block" type="submit" value="Sign Up!" style="margin-top:10px">Sign In</button>
+    </form>
+</div>
 
 {% endblock %}
+
+<!--<form class = 'form-signin' method="POST" action="{% url 'signup' %}" >-->
+    <!--{% csrf_token %}-->
+    <!--<h3>Email:</h3>-->
+    <!--<br />-->
+    <!--<input type="email" name="username" class="form-control" placeholder="Email Address" autofocus />-->
+    <!--<br />-->
+    <!--<h3>Password</h3>-->
+    <!--<br />-->
+    <!--<input class="form-control" placeholder="Password" type="password" name="password1" />-->
+    <!--<br />-->
+    <!--<h3>Confirm Password</h3>-->
+    <!--<br />-->
+    <!--<input class="form-control" placeholder="Confirm Password" type="password" name="password2" />-->
+    <!--<br />-->
+    <!--<br />-->
+    <!--<input class="btn btn-primary" type="submit" value="Sign Up!"/>-->
+<!--</form>-->
