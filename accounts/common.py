@@ -133,8 +133,17 @@ def get_tran_category_summary_date(user_id):
         ).annotate(
                 total=Sum('transaction__tran_amount'))
         for item in record:
-            print (item.total)
-            print (item.name)
+            # print (item.total)
+            # print (item.name)
+            if '&' in item.name:
+                item.name = item.name.replace('&','\\46')
+                print (item.name)
+            if '"' in item.name:
+                item.name = item.name.replace('"',"\\42")
+            if '$' in item.name:
+                item.name = item.name.replace('$',"\\44")
+            if '#' in item.name:
+                item.name = item.name.replace('#',"\\43")
         # record = Transaction.objects.values('tran_type').\
         #     annotate(total=Sum('tran_amount')).\
         #     filter(account=user_id).order_by('tran_type')
